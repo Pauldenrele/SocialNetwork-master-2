@@ -36,20 +36,36 @@ public class FindFriendsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friends);
+
+/**
+ * allUserDatabaseRef gets the users registered
+ */
         allUsersDatabaseRef= FirebaseDatabase.getInstance().getReference().child("Users");
        allUsersDatabaseRef.keepSynced(true);
+
+        /**
+         * Toolbar
+         */
         mToolbar = (Toolbar)findViewById(R.id.find_friends_appbar_layout);
         setSupportActionBar(mToolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Find Friends");
 
-       SearchResultList=(RecyclerView)findViewById(R.id.search_result_list);
+        /**
+         * recyclerView for the search result
+         */
+
+        SearchResultList=(RecyclerView)findViewById(R.id.search_result_list);
        SearchResultList.setHasFixedSize(true);
        SearchResultList.setLayoutManager(new LinearLayoutManager(this));
 
+        /**
+         * Init for the search button and editText
+         */
        SearchInputText=(EditText)findViewById(R.id.search_box_input);
        SearchButton=(ImageButton)findViewById(R.id.search_people_friends_button);
+
 
        SearchButton.setOnClickListener(new View.OnClickListener() {
            @Override
@@ -62,15 +78,35 @@ public class FindFriendsActivity extends AppCompatActivity {
 
     }
 
+
     private void SearchPeopleAndFriends(String searchBoxInput) {
 
 
         Toast.makeText(this, "Searching...", Toast.LENGTH_SHORT).show();
+
+        /**
+         * Query for the search button
+         */
         Query searchPeopleandFriendsQuery =allUsersDatabaseRef.orderByChild("fullname")
                 .startAt(searchBoxInput).endAt(searchBoxInput + "\uf8ff");
+
+        /**
+         * FirebaseRecycleradapter which is holding the findfriends class and the viewHolder
+         */
         FirebaseRecyclerAdapter<FindFriends ,FindFriendsViewHolder> firebaseRecyclerAdapter =
                 new FirebaseRecyclerAdapter<FindFriends, FindFriendsViewHolder>(
 
+                        /**
+                         * In a recyclerAdapter
+                         *
+                         * The class for the(getter and setter)
+                         *
+                         * The layout for the user
+                         *
+                         * The ViewHolder class
+                         *
+                         * the Query in connection with the firebase users
+                         */
                         FindFriends.class,
                         R.layout.all_user_display_layout,
                         FindFriendsViewHolder.class,
@@ -79,6 +115,10 @@ public class FindFriendsActivity extends AppCompatActivity {
                 ) {
                     @Override
                     protected void populateViewHolder(FindFriendsViewHolder viewHolder, FindFriends model, final int position) {
+
+                        /**
+                         * The viewHolder that holds the layout using the itemview and gets the value from the findfriends class
+                         */
                         viewHolder.setFullname(model.getFullname());
                         viewHolder.setStatus(model.getStatus());
                         viewHolder.setProfileimage(getApplicationContext() , model.getProfileimage());
